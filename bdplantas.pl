@@ -64,16 +64,16 @@ continente_origen(aconito, europa).
 trata_enfermedad(aconito, neuralgia).
 trata_enfermedad(aconito, fiebre).
 trata_enfermedad(aconito, reumatismo).
-accion_efecto_planta(aconito, no_especificado).
+accion_efecto_planta(aconito, analgesico_antiinflamatorio).
 modo_tratamiento(aconito, uso_externo).
 modo_tratamiento(aconito, tintura).
 precaucion_planta(aconito, toxicidad_alta).
 enfermedad(neuralgia).
 enfermedad(fiebre).
 enfermedad(reumatismo).
-sintoma_enfermedad(neuralgia, no_especificado).
-sintoma_enfermedad(fiebre, no_especificado).
-sintoma_enfermedad(reumatismo, no_especificado).
+sintoma_enfermedad(neuralgia, dolor_nervioso_intenso).
+sintoma_enfermedad(fiebre, temperatura_elevada).
+sintoma_enfermedad(reumatismo, dolor_articular).
 tipo_enfermedad(neuralgia, nerviosa).
 tipo_enfermedad(fiebre, general).
 tipo_enfermedad(reumatismo, musculoesqueletica).
@@ -1328,21 +1328,21 @@ sintoma_enfermedad(apoplejía, no_especificado).
 sintoma_enfermedad(congestion_cerebral, no_especificado).
 
 %------------------ JAZMÍN AMARILLO ------------------
-planta(jazmin_amarillo).
-nombre_cientifico(jazmin_amarillo, gelsemium_sempervirens).
-continente_origen(jazmin_amarillo, america).
-pais_origen(jazmin_amarillo, mexico).
-modo_preparacion(jazmin_amarillo, tintura).
-trata_enfermedad(jazmin_amarillo, dolores_de_cabeza).
-trata_enfermedad(jazmin_amarillo, reuma).
-trata_enfermedad(jazmin_amarillo, espasmos).
-trata_enfermedad(jazmin_amarillo, asma_bronquial).
-trata_enfermedad(jazmin_amarillo, menstruacion_dolorosa).
-accion_efecto_planta(jazmin_amarillo, analgésico).
-accion_efecto_planta(jazmin_amarillo, antiespasmódico).
-modo_tratamiento(jazmin_amarillo, tomar_tintura).
-precaucion_planta(jazmin_amarillo, problemas_corazon).
-precaucion_planta(jazmin_amarillo, problemas_riñones).
+planta(jazminamarillo).
+nombre_cientifico(jazminamarillo, gelsemium_sempervirens).
+continente_origen(jazminamarillo, america).
+pais_origen(jazminamarillo, mexico).
+modo_preparacion(jazminamarillo, tintura).
+trata_enfermedad(jazminamarillo, dolores_de_cabeza).
+trata_enfermedad(jazminamarillo, reuma).
+trata_enfermedad(jazminamarillo, espasmos).
+trata_enfermedad(jazminamarillo, asma_bronquial).
+trata_enfermedad(jazminamarillo, menstruacion_dolorosa).
+accion_efecto_planta(jazminamarillo, analgésico).
+accion_efecto_planta(jazminamarillo, antiespasmódico).
+modo_tratamiento(jazminamarillo, tomar_tintura).
+precaucion_planta(jazminamarillo, problemas_corazon).
+precaucion_planta(jazminamarillo, problemas_riñones).
 enfermedad(dolores_de_cabeza).
 enfermedad(reuma).
 enfermedad(espasmos).
@@ -1999,3 +1999,43 @@ enfermedad(colesterol).
 enfermedad(problemas_cardiacos).
 sintoma_enfermedad(colesterol, dolor_pecho).
 sintoma_enfermedad(problemas_cardiacos, dolor_pecho).
+
+
+% Nuevas enfermedades y síntomas
+enfermedad(quemaduras).
+enfermedad(heridas).
+enfermedad(problemas_digestivos).
+enfermedad(herpes).
+sintoma_enfermedad(quemaduras, dolor_piel).
+sintoma_enfermedad(quemaduras, enrojecimiento).
+sintoma_enfermedad(heridas, piel_lesionada).
+sintoma_enfermedad(heridas, sangrado_leve).
+sintoma_enfermedad(problemas_digestivos, dolor_abdominal).
+sintoma_enfermedad(problemas_digestivos, hinchazon).
+sintoma_enfermedad(herpes, ampollas_piel).
+sintoma_enfermedad(herpes, picazon).
+
+% Elementos químicos de las plantas
+elementos_planta(manzanilla, [flavonoides, camazuleno, bisabolol]).
+elementos_planta(sabila, [aloina, antraquinonas, polisacaridos]).
+elementos_planta(sauce, [salicina, taninos, flavonoides]).
+elementos_planta(quina, [quinina, quinidina, cinconina]).
+elementos_planta(adormidera, [morfina, codeina, tebaina]).
+
+% Medicamentos derivados de plantas
+produce_medicamento(sauce, aspirina).
+produce_medicamento(quina, quinina).
+produce_medicamento(adormidera, morfina).
+produce_medicamento(adormidera, codeina).
+
+% Efectos de los medicamentos derivados
+efectos_medicamento(aspirina, [analgesico, antiinflamatorio, antipiretico]).
+efectos_medicamento(quinina, [antimalarico, antipiretico]).
+efectos_medicamento(morfina, [analgesico, sedante]).
+efectos_medicamento(codeina, [analgesico, antitusivo]).
+
+% Tratamientos con medicamentos no derivados de plantas
+tratamiento_medicamento(gripe, 'Paracetamol, descanso, hidratación').
+tratamiento_medicamento(herpes, 'Aciclovir, cremas antivirales').
+tratamiento_medicamento(diabetes, 'Insulina, metformina, control dietético').
+tratamiento_medicamento(tos, 'Dextrometorfano, jarabes expectorantes').
