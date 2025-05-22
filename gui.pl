@@ -4,7 +4,7 @@
 % Cargar el archivo de conocimiento
 :- consult('bdplantas.pl').
 
-% Predicado principal para iniciar la GUI
+% GUI
 mostrar_gui :-
     new(Dialog, dialog('Información de Plantas')),
     send(Dialog, size, size(700, 650)),
@@ -13,13 +13,30 @@ mostrar_gui :-
     new(Menu, menu('Selecciona una Planta', cycle)),
     send(Dialog, append, Menu),
 
+    new(Menu2, menu('Selecciona una enfermedad', cycle)),
+    send(Dialog, append, Menu2),
+
+    new(Menu3, menu('Accion o Efecto', cycle)),
+    send(Dialog, append, Menu3),
 
 
-    % Obtener todas las plantas desde nombre_cientifico/2
+    % Obtener todas las plantas desde nombre_cientifico
     findall(Especie, nombre_cientifico(Especie, _), Especies),
     sort(Especies, EspeciesUnicas),
     forall(member(Especie, EspeciesUnicas),
            send(Menu, append, Especie)),
+
+
+    % Llenar Menu2 con enfermedades
+    findall(Enfermedad, trata_enfermedad(_, Enfermedad), Enfermedades),
+    sort(Enfermedades, EnfermedadesUnicas),
+    forall(member(Enfermedad, EnfermedadesUnicas),
+           send(Menu2, append, Enfermedad)),
+
+    findall(Efecto, accion_efecto_planta(_, Efecto), Efectos),
+    sort(Efectos, EfectoUnicas),
+    forall(member(Efecto, EfectoUnicas),
+           send(Menu3, append, Efecto)),
 
 
     % Crear área de texto para mostrar la información
@@ -45,7 +62,7 @@ mostrar_gui :-
                       message(@prolog, mostrar_nombrecientifico, Text))),
 
     new(Boton5, button('Enfermedades',
-                      message(@prolog, mostrar_enfermedades, Text))),
+                      message(@prolog, mostrar_enfermedadesb, Text))),
 
 
 
@@ -72,22 +89,23 @@ mostrar_gui :-
     send(Boton5,position,point(300,100)),
 
 
-    %send(Horizontally, append, Boton, right),
-    % send(Horizontally, append, Botonp, right),
-    %send(Horizontally, display, Botonp),
-    %send(Botonp,position,point(500,10)),
 
-    % Asociar selección del menú con acción
+    % selección del menú con acción
     send(Menu, message, message(@prolog, mostrar_info_planta, Menu?selection, Text, ImageBox)),
+
+    send(Menu2, message, message(@prolog, mostrar_enfermedades, Menu2?selection, Text)),
+
+    send(Menu3, message, message(@prolog, mostrar_accion, Menu3?selection, Text)),
+
 
     % Mostrar ventana
     send(Dialog, open).
 
 % Mostrar continentes de origen de todas las plantas
-mostrar_enfermedades(Text) :-
+mostrar_enfermedades(X,Text) :-
     findall(Info,
-            (enfermedad(Enfermedad),
-             format(atom(Info), '~w ', [Enfermedad])),
+            (trata_enfermedad(Y,X),
+             format(atom(Info), 'Esta planta lo cura: ~w ', [Y])),
             InfoList),
     sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
     atomic_list_concat(UniqueList, '\n', InfoText),
@@ -95,11 +113,36 @@ mostrar_enfermedades(Text) :-
 
 
 
+
+% Mostrar continentes de origen de todas las plantas
+mostrar_enfermedadesb(Text) :-
+    findall(Info,
+            (enfermedad(X),
+             format(atom(Info), '~w ', [X])),
+            InfoList),
+    sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
+    atomic_list_concat(UniqueList, '\n', InfoText),
+    send(Text, contents, InfoText).
+
+
+% Mostrar continentes de origen de todas las plantas
+mostrar_accion(Accion,Text) :-
+    findall(Info,
+            (accion_efecto_planta(Y,Accion),
+             format(atom(Info), 'Esta planta tiene ese efecto: ~w ', [Y])),
+            InfoList),
+    sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
+    atomic_list_concat(UniqueList, '\n', InfoText),
+    send(Text, contents, InfoText).
+
+
+
+
 % Mostrar continentes de origen de todas las plantas
 mostrar_nombrecientifico(Text) :-
     findall(Info,
-            (nombre_cientifico(Especie, Continente),
-             format(atom(Info), '~w Con nombre ~w', [Especie, Continente])),
+            (nombre_cientifico(X, Y),
+             format(atom(Info), '~w Con nombre ~w', [X, Y])),
             InfoList),
     sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
     atomic_list_concat(UniqueList, '\n', InfoText),
@@ -110,8 +153,8 @@ mostrar_nombrecientifico(Text) :-
 % Mostrar continentes de origen de todas las plantas
 mostrar_modopreparacion(Text) :-
     findall(Info,
-            (modo_preparacion(Especie, Continente),
-             format(atom(Info), '~w se prepara con ~w', [Especie, Continente])),
+            (modo_preparacion(X, Y),
+             format(atom(Info), '~w se prepara con ~w', [X, Y])),
             InfoList),
     sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
     atomic_list_concat(UniqueList, '\n', InfoText),
@@ -121,8 +164,8 @@ mostrar_modopreparacion(Text) :-
 % Mostrar continentes de origen de todas las plantas
 mostrar_origen(Text) :-
     findall(Info,
-            (continente_origen(Especie, Continente),
-             format(atom(Info), '~w proviene de ~w', [Especie, Continente])),
+            (continente_origen(X, Y),
+             format(atom(Info), '~w proviene de ~w', [X, Y])),
             InfoList),
     sort(InfoList, UniqueList),  % Opcional: eliminar duplicados y ordenar
     atomic_list_concat(UniqueList, '\n', InfoText),
@@ -173,6 +216,10 @@ mostrar_plantas_botiquin(Text, ImageBox) :-
         send(ImageBox, display, Box, point(0,0))
     ;   send(ImageBox, display, text('Imagen no disponible'))
     ).
+
+
+
+
 
 % Mostrar información y cargar imagen
 mostrar_info_planta(Especie, Text, ImageBox) :-
@@ -251,4 +298,5 @@ info_planta_aux(Especie, Info) :-
     trata_enfermedad(Especie, Enfermedad),
     sintoma_enfermedad(Enfermedad, Sintoma),
     format(atom(Info), 'Síntoma Asociado: ~w (Enfermedad: ~w)', [Sintoma, Enfermedad]).
+
 :- initialization(mostrar_gui).
